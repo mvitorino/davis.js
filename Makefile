@@ -1,6 +1,5 @@
 
 SRC = lib/davis.js \
-	lib/davis.utils.js \
 	lib/davis.listener.js \
 	lib/davis.event.js \
 	lib/davis.logger.js \
@@ -16,8 +15,9 @@ VERSION = $(shell cat VERSION)
 all: davis.js davis.min.js docs
 
 davis.js: $(SRC)
-	cat $^ | \
-	sed "s/@VERSION/${VERSION}/" > $@
+	echo "define(['libs/underscore'], function(_) {\nvar Davis = {}\n" > $@
+	cat $^ | sed "s/@VERSION/${VERSION}/" >> $@
+	echo " return Davis; });" >> $@
 
 davis.min.js: davis.js
 	uglifyjs < $< > $@
